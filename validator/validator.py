@@ -1,4 +1,28 @@
 class Validator:
+
+    def string(self):
+        return StringSchema()
+
+    def number(self):
+        return NumberSchema()
+
+    def list(self):
+        return ListSchema()
+
+    def dict(self):
+        return DictSchema()
+
+class NumberSchema:
+    pass
+
+class ListSchema:
+    pass
+
+class DictSchema:
+    pass
+
+
+class StringSchema:
     def __init__(self):
         self.conditions = {
             'required': False,
