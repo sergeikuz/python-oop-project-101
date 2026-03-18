@@ -3,10 +3,7 @@
 
 # python-package
 
-[![Github Actions Status](https://github.com/hexlet-boilerplates/python-package/workflows/Python%20CI/badge.svg)](https://github.com/hexlet-boilerplates/python-package/actions)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hexlet-boilerplates_python-package&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=hexlet-boilerplates_python-package)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=hexlet-boilerplates_python-package&metric=coverage)](https://sonarcloud.io/summary/new_code?id=hexlet-boilerplates_python-package)
-
+[![Python CI](https://github.com/sergeikuz/python-oop-project-101/actions/workflows/ci.yml/badge.svg)](https://github.com/sergeikuz/python-oop-project-101/actions/workflows/ci.yml)
 ### Links
 
 This project was built using these tools:
