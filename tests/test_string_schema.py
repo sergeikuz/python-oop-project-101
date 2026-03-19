@@ -1,7 +1,7 @@
 from validator.validator import Validator
 
 
-class TestValidator:
+class TestValidatorStringSchema:
     def test_required_valid(self):
         validator = Validator()
         scheme = validator.string()
@@ -70,8 +70,8 @@ class TestValidator:
         scheme1 = validator.string()
         scheme1.required().min_len(10).contains("test")
 
-        assert scheme1.is_valid("test") is False  # не проходит min_len
-        assert scheme1.is_valid("very long string") is False  # не содержит "test"
+        assert scheme1.is_valid("test") is False
+        assert scheme1.is_valid("very long string") is False
 
     def test_chaining_methods(self):
         validator = Validator()
@@ -80,21 +80,12 @@ class TestValidator:
 
         assert scheme.is_valid("abc") is True
         assert scheme.is_valid("ab") is True
-        assert scheme.is_valid("a") is False  # слишком короткая
-        assert scheme.is_valid("cd") is False  # нет "ab"
+        assert scheme.is_valid("a") is False
+        assert scheme.is_valid("cd") is False
 
-    def test_conditions_reset_with_string(self):
-        base_validator = Validator().string().required().min_len(5)
-        new_validator = base_validator.string()  # сбрасывает условия
-
-        # Проверяем, что условия сброшены
-        assert new_validator.conditions == {
-            'required': False,
-            'contains': None,
-            'min_len': None,
-        }
-        assert new_validator.is_valid("") is True  # пустая строка валидна без условий
-        assert new_validator.is_valid(None) is True  # None валиден без условий
+    def test_conditions_(self):
+        v = Validator()
+        assert v.string().min_len(10).min_len(4).is_valid('Hexlet') is True
 
     def test_edge_cases(self):
         validator = Validator()
