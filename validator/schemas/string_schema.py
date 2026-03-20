@@ -49,4 +49,3 @@ class StringSchema:
 
         return True
 
-

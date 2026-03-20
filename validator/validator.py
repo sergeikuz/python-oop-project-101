@@ -2,42 +2,32 @@ from validator.schemas.dict_schema import DictSchema
 from validator.schemas.list_schema import ListSchema
 from validator.schemas.number_schema import NumberSchema
 from validator.schemas.string_schema import StringSchema
+from validator.validatar_registy import ValidatorRegistry 
 
 
 class Validator:
-    _TYPE_MAP = {
-        'string': StringSchema,
-        'number': NumberSchema,
-        'list': ListSchema,
-        'dict': DictSchema,
-    }
-
     def __init__(self):
-        self._custom_validators = {}
+        self._registry = ValidatorRegistry()
+
+    def add_validator(self, type: str, name: str, fn):
+        self._registry.add_validator(type, name, fn)
 
     def string(self):
         schema = StringSchema()
-        schema._validators = self._custom_validators.get('string', {})
+        schema._validators = self._registry.get_validators('string')
         return schema
 
     def number(self):
         schema = NumberSchema()
-        schema._validators = self._custom_validators.get('number', {})
+        schema._validators = self._registry.get_validators('number')
         return schema
 
     def list(self):
         schema = ListSchema()
-        schema._validators = self._custom_validators.get('list', {})
+        schema._validators = self._registry.get_validators('list')
         return schema
 
     def dict(self):
         schema = DictSchema()
-        schema._validators = self._custom_validators.get('dict', {})
+        schema._validators = self._registry.get_validators('dict')
         return schema
-
-    def add_validator(self, type: str, name: str, fn):
-        if type not in self._TYPE_MAP:
-            raise ValueError(f"Unsupported type: {type}")
-        if type not in self._custom_validators:
-            self._custom_validators[type] = {}
-        self._custom_validators[type][name] = fn
