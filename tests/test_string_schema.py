@@ -26,11 +26,10 @@ class TestValidatorStringSchema:
     def test_min_len_invalid(self):
         validator = Validator()
         scheme = validator.string()
-        scheme.min_len(3)  # min_len без required — пустая строка валидна
+        scheme.min_len(3)
         assert scheme.is_valid("ab") is False
         assert scheme.is_valid("") is False
 
-        # Проверка с required
         scheme2 = validator.string()
         scheme2.required().min_len(3)
         assert scheme2.is_valid("ab") is False
@@ -54,7 +53,7 @@ class TestValidatorStringSchema:
 
     def test_no_conditions_always_valid(self):
         validator = Validator()
-        scheme = validator.string()  # создаём схему без условий
+        scheme = validator.string()
         assert scheme.is_valid("any") is True
         assert scheme.is_valid("") is True
         assert scheme.is_valid(None) is True
@@ -90,25 +89,21 @@ class TestValidatorStringSchema:
     def test_edge_cases(self):
         validator = Validator()
 
-        # min_len(0) — любая строка проходит
         scheme1 = validator.string()
         scheme1.min_len(0)
         assert scheme1.is_valid("") is True
         assert scheme1.is_valid("a") is True
 
-        # min_len(1) — пустая строка не проходит
         scheme2 = validator.string()
         scheme2.min_len(1)
         assert scheme2.is_valid("a") is True
         assert scheme2.is_valid("") is False
 
-        # contains("") — пустая подстрока содержится в любой строке
         scheme3 = validator.string()
         scheme3.contains("")
         assert scheme3.is_valid("anything") is True
         assert scheme3.is_valid("") is True
 
-        # contains("a") — строка должна содержать "a"
         scheme4 = validator.string()
         scheme4.contains("a")
         assert scheme4.is_valid("a") is True

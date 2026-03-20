@@ -4,7 +4,9 @@ class NumberSchema:
             'required': False,
             'positive': False,
             'range': None,
+            'tests': {},
         }
+        self._validators = {}
 
     def range(self, min_val, max_val):
         self.conditions['range'] = (min_val, max_val)
@@ -18,11 +20,15 @@ class NumberSchema:
         self.conditions['required'] = True
         return self
 
+    def test(self, name, *args):
+        self.conditions['tests'][name] = args
+        return self
+
     def is_valid(self, data) -> bool:
         if self.conditions['required']:
-            if data is None or data == '':
+            if data is None:
                 return False
-            if not isinstance(data, int):
+            if not isinstance(data, (int, float)):
                 return False
 
         if self.conditions['positive']:
@@ -35,4 +41,9 @@ class NumberSchema:
             if not (min_val <= data <= max_val):
                 return False
 
+        for name, args in self.conditions['tests'].items():
+            fn = self._validators.get(name)
+            if fn and not fn(data, *args):
+                return False
         return True
+
