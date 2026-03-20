@@ -4,7 +4,8 @@ from validator.validator import Validator
 class TestValidatorListSchema:
     def test_base(self):
         validator = Validator()
-        schema= validator.list()
+        schema = validator.list()
+
         assert schema.is_valid(None) is True
 
         schema = schema.required()
