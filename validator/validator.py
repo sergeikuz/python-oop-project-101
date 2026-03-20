@@ -2,7 +2,7 @@ from validator.schemas.dict_schema import DictSchema
 from validator.schemas.list_schema import ListSchema
 from validator.schemas.number_schema import NumberSchema
 from validator.schemas.string_schema import StringSchema
-from validator.validatar_registy import ValidatorRegistry 
+from validator.validatar_registy import ValidatorRegistry
 
 
 class Validator:
