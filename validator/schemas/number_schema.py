@@ -11,7 +11,11 @@ class NumberSchema(BaseSchema):
         self._positive = True
         return self
 
-    def range(self, min_val: int | float, max_val: int | float) -> "NumberSchema":
+    def range(
+        self,
+        min_val: int | float,
+        max_val: int | float,
+    ) -> "NumberSchema":
         self._range = (min_val, max_val)
         return self
 
