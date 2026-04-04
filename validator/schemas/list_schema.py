@@ -1,36 +1,26 @@
-class ListSchema:
-    def __init__(self):
-        self.conditions = {
-            'required': False,
-            'sizeof': None,
-            'tests': {},
-        }
-        self._validators = {}
+from validator.schemas.base import BaseSchema
 
-    def sizeof(self, length: int):
-        self.conditions['sizeof'] = length
-        return self
 
-    def required(self):
-        self.conditions['required'] = True
-        return self
+class ListSchema(BaseSchema):
+    def __init__(self) -> None:
+        super().__init__()
+        self._sizeof: int | None = None
 
-    def test(self, name, *args):
-        self.conditions['tests'][name] = args
+    def sizeof(self, length: int) -> "ListSchema":
+        self._sizeof = length
         return self
 
     def is_valid(self, data) -> bool:
-        if self.conditions['required']:
-            if not isinstance(data, list):
-                return False
+        if not self._check_required(data):
+            return False
 
-        if self.conditions['sizeof'] is not None:
-            if len(data) < self.conditions['sizeof']:
-                return False
+        if data is None:
+            return True
 
-        for name, args in self.conditions['tests'].items():
-            fn = self._validators.get(name)
-            if fn and not fn(data, *args):
-                return False
-        return True
+        if not isinstance(data, list):
+            return False
 
+        if self._sizeof is not None and len(data) < self._sizeof:
+            return False
+
+        return self._run_tests(data)

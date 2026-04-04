@@ -1,51 +1,37 @@
-class StringSchema:
-    def __init__(self):
-        self.conditions = {
-            'required': False,
-            'contains': None,
-            'min_len': None,
-            'tests': {},
-        }
-        self._validators = {}
+from validator.schemas.base import BaseSchema
 
-    def contains(self, substring):
-        self.conditions['contains'] = substring
+
+class StringSchema(BaseSchema):
+    def __init__(self) -> None:
+        super().__init__()
+        self._contains: str | None = None
+        self._min_len: int | None = None
+
+    def contains(self, substring: str) -> "StringSchema":
+        self._contains = substring
         return self
 
-    def min_len(self, length: int):
-        self.conditions['min_len'] = length
-        return self
-
-    def required(self):
-        self.conditions['required'] = True
-        return self
-
-    def test(self, name, *args):
-        self.conditions['tests'][name] = args
+    def min_len(self, length: int) -> "StringSchema":
+        self._min_len = length
         return self
 
     def is_valid(self, data) -> bool:
+        if not self._check_required(data):
+            return False
+
         if data is None:
-            return not self.conditions['required']
+            return True
 
         if not isinstance(data, str):
             return False
 
-        if self.conditions['required'] and data == '':
+        if self._required and data == "":
             return False
 
-        if self.conditions['min_len'] is not None:
-            if len(data) < self.conditions['min_len']:
-                return False
+        if self._min_len is not None and len(data) < self._min_len:
+            return False
 
-        if self.conditions['contains'] is not None:
-            if self.conditions['contains'] not in data:
-                return False
+        if self._contains is not None and self._contains not in data:
+            return False
 
-        for name, args in self.conditions['tests'].items():
-            fn = self._validators.get(name)
-            if fn and not fn(data, *args):
-                return False
-
-        return True
-
+        return self._run_tests(data)

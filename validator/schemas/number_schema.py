@@ -1,62 +1,36 @@
-class NumberSchema:
-    def __init__(self):
-        self.conditions = {
-            'required': False,
-            'positive': False,
-            'range': None,
-            'tests': {},
-        }
-        self._validators = {}
+from validator.schemas.base import BaseSchema
 
-    def range(self, min_val, max_val):
-        self.conditions['range'] = (min_val, max_val)
+
+class NumberSchema(BaseSchema):
+    def __init__(self) -> None:
+        super().__init__()
+        self._positive: bool = False
+        self._range: tuple | None = None
+
+    def positive(self) -> "NumberSchema":
+        self._positive = True
         return self
 
-    def positive(self):
-        self.conditions['positive'] = True
-        return self
-
-    def required(self):
-        self.conditions['required'] = True
-        return self
-
-    def test(self, name, *args):
-        self.conditions['tests'][name] = args
+    def range(self, min_val: int | float, max_val: int | float) -> "NumberSchema":
+        self._range = (min_val, max_val)
         return self
 
     def is_valid(self, data) -> bool:
-        if self.conditions['required']:
-            if data is None:
-                return False
-            if not isinstance(data, (int, float)):
-                return False
-
-        if data is None and not self.conditions['required']:
-            return True
-
-        if not self._is_positive(data):
+        if data is not None and not isinstance(data, (int, float)):
             return False
-        if not self._is_in_range(data):
-            return False
-        for name, args in self.conditions['tests'].items():
-            fn = self._validators.get(name)
-            if fn and not fn(data, *args):
-                return False
-        return True
 
-    def _is_positive(self, data):
+        if not self._check_required(data):
+            return False
+
         if data is None:
             return True
-        if self.conditions['positive']:
-            if data <= 0:
-                return False
-        return True
 
-    def _is_in_range(self, data):
-        if data is None:
-            return True
-        if self.conditions['range'] is not None:
-            min_val, max_val = self.conditions['range']
+        if self._positive and data <= 0:
+            return False
+
+        if self._range is not None:
+            min_val, max_val = self._range
             if not (min_val <= data <= max_val):
                 return False
-        return True
+
+        return self._run_tests(data)

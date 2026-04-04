@@ -1,58 +1,33 @@
-class DictSchema:
-    def __init__(self):
-        self.conditions = {
-            'required': False,
-            'shape': None,
-        }
-        self._validators = {}
+from validator.schemas.base import BaseSchema
 
-    def shape(self, schema_dict: dict):
-        """
-        Задаёт структуру проверяемого словаря.
 
-        Args:
-            schema_dict (dict): словарь, где ключи — имена полей,
-                значения — схемы валидации (StringSchema, NumberSchema и т. д.)
-        """
-        self.conditions['shape'] = schema_dict
-        return self
+class DictSchema(BaseSchema):
+    def __init__(self) -> None:
+        super().__init__()
+        self._shape: dict | None = None
 
-    def required(self):
-        """Помечает схему как обязательную."""
-        self.conditions['required'] = True
+    def shape(self, schema_dict: dict) -> "DictSchema":
+        self._shape = schema_dict
         return self
 
     def is_valid(self, data) -> bool:
-        """
-        Проверяет, соответствует ли данные заданной схеме.
-
-        Args:
-            data: данные для валидации.
-
-        Returns:
-            bool: True, если данные валидны, иначе False.
-        """
-        if self.conditions['required']:
-            if data is None:
-                return False
-            if not isinstance(data, dict):
-                return False
+        if not self._check_required(data):
+            return False
 
         if data is None:
             return True
 
-        if self.conditions['shape'] is None:
-            return isinstance(data, dict)
-
-        expected_keys = set(self.conditions['shape'].keys())
-        actual_keys = set(data.keys())
-
-        if not expected_keys.issubset(actual_keys):
+        if not isinstance(data, dict):
             return False
 
-        for key, schema in self.conditions['shape'].items():
-            value = data[key]
-            if not schema.is_valid(value):
+        if self._shape is None:
+            return True
+
+        if not set(self._shape.keys()).issubset(set(data.keys())):
+            return False
+
+        for key, schema in self._shape.items():
+            if not schema.is_valid(data[key]):
                 return False
 
         return True
