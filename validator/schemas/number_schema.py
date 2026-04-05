@@ -20,21 +20,19 @@ class NumberSchema(BaseSchema):
         return self
 
     def is_valid(self, data) -> bool:
-        if data is not None and not isinstance(data, (int, float)):
-            return False
-
         if not self._check_required(data):
             return False
 
-        if data is None:
-            return True
-
-        if self._positive and data <= 0:
+        if data is not None and not isinstance(data, (int, float)):
             return False
 
-        if self._range is not None:
-            min_val, max_val = self._range
-            if not (min_val <= data <= max_val):
+        if data is not None:
+            if self._positive and data <= 0:
                 return False
+
+            if self._range is not None:
+                min_val, max_val = self._range
+                if not (min_val <= data <= max_val):
+                    return False
 
         return self._run_tests(data)

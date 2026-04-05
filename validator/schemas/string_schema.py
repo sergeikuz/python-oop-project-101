@@ -19,13 +19,10 @@ class StringSchema(BaseSchema):
         if not self._check_required(data):
             return False
 
-        if data is None:
-            return True
-
-        if not isinstance(data, str):
+        if data is not None and not isinstance(data, str):
             return False
 
-        if self._required and data == "":
+        if not self._check_empty_string(data):
             return False
 
         if self._min_len is not None and len(data) < self._min_len:
