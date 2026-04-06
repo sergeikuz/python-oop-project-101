@@ -1,3 +1,4 @@
+
 name: Python CI
 
 on:
@@ -12,29 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Check pyproject.toml exists and is valid
-        run: |
-          if [ ! -f pyproject.toml ]; then
-            echo "ERROR: pyproject.toml not found in $(pwd)"
-            exit 1
-          fi
-          python -c "
-          import tomllib
-          with open('pyproject.toml', 'rb') as f:
-              tomllib.load(f)
-          print('pyproject.toml is valid TOML')
-          "
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.13'
 
-      - name: Install uv (version with dependency-groups support)
-        run: pip install "uv>=0.13.0"  # Ключевое изменение
+      - name: Install uv via official installer
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Check uv version
+        run: uv --version
 
       - name: Sync dependencies (including dev)
-        run: uv sync --group dev  # Теперь сработает
+        run: uv sync --group dev
 
       - name: Run linter and tests
         run: |
