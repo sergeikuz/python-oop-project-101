@@ -1,21 +1,18 @@
 from validator.validator import Validator
 
 
-class TestValidatorAddShema:
+class TestValidatorAddSchema:
     def test_base(self):
         v = Validator()
 
         def starts_with(value, start):
             result = value.startswith(start)
-            print(f"starts_with('{value}', '{start}') = {result}")
             return result
 
         v.add_validator('string', 'startwith', starts_with)
         schema = v.string().test('startwith', 'H')
-        print(f"Schema rules: {schema._validators}")
 
         is_valid = schema.is_valid('exlet')
-        print(f"is_valid('exlet') = {is_valid}")
 
         assert is_valid is False
 

@@ -3,7 +3,7 @@ from validator.schemas.base import BaseSchema
 
 class ListSchema(BaseSchema):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(expected_type=list)
         self._sizeof: int | None = None
 
     def sizeof(self, length: int) -> "ListSchema":
@@ -12,12 +12,6 @@ class ListSchema(BaseSchema):
 
     def is_valid(self, data) -> bool:
         if not self._check_required(data):
-            return False
-
-        if data is None:
-            return True
-
-        if not isinstance(data, list):
             return False
 
         if self._sizeof is not None and len(data) < self._sizeof:

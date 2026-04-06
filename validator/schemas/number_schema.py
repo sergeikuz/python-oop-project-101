@@ -3,7 +3,7 @@ from validator.schemas.base import BaseSchema
 
 class NumberSchema(BaseSchema):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(expected_type=int)
         self._positive: bool = False
         self._range: tuple | None = None
 
@@ -23,10 +23,7 @@ class NumberSchema(BaseSchema):
         if not self._check_required(data):
             return False
 
-        if data is not None and not isinstance(data, (int, float)):
-            return False
-
-        if data is not None:
+        if isinstance(data, self._expected_type):
             if self._positive and data <= 0:
                 return False
 
