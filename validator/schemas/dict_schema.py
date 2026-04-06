@@ -14,11 +14,12 @@ class DictSchema(BaseSchema):
         if not self._check_required(data):
             return False
 
-        if not set(self._shape.keys()).issubset(set(data.keys())):
-            return False
-
-        for key, schema in self._shape.items():
-            if not schema.is_valid(data[key]):
+        if self._shape is not None:
+            if not set(self._shape.keys()).issubset(set(data.keys())):
                 return False
+
+            for key, schema in self._shape.items():
+                if not schema.is_valid(data[key]):
+                    return False
 
         return True
