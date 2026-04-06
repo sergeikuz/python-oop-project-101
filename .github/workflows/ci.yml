@@ -27,7 +27,7 @@ jobs:
         run: uv --version
 
       - name: Sync
-        run: uv sync
+        run: uv sync --all-groups
 
       - name: Run linter and tests
         run: |
