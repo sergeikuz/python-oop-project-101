@@ -22,7 +22,7 @@ force-single-line = false
 [tool.hatch.build.targets.wheel]
 packages = ["validator"]
 
-[project.dependency-groups]
+[dependency-groups]
 dev = [
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
