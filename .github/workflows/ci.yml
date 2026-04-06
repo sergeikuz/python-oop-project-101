@@ -30,11 +30,11 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Install uv
-        run: pip install uv
+      - name: Install uv (version with dependency-groups support)
+        run: pip install "uv>=0.13.0"  # Ключевое изменение
 
       - name: Sync dependencies (including dev)
-        run: uv sync --group dev
+        run: uv sync --group dev  # Теперь сработает
 
       - name: Run linter and tests
         run: |
