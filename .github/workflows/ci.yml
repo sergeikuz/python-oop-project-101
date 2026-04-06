@@ -26,8 +26,8 @@ jobs:
       - name: Check uv version
         run: uv --version
 
-      - name: Sync dependencies (including dev)
-        run: uv sync --group dev
+      - name: Sync
+        run: uv sync
 
       - name: Run linter and tests
         run: |
